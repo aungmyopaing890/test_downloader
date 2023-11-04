@@ -106,6 +106,8 @@ class FlutterDownloader {
     print("==========================================");
     print('Creating Download');
     print(url);
+    print('Creating Testing');
+
     assert(_initialized, 'plugin flutter_downloader is not initialized');
     assert(Directory(savedDir).existsSync(), 'savedDir does not exist');
 
