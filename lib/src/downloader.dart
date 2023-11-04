@@ -103,6 +103,9 @@ class FlutterDownloader {
     bool allowCellular = true,
     int timeout = 15000,
   }) async {
+    print("==========================================");
+    print('Creating Download');
+    print(url);
     assert(_initialized, 'plugin flutter_downloader is not initialized');
     assert(Directory(savedDir).existsSync(), 'savedDir does not exist');
 
