@@ -134,6 +134,7 @@ class FlutterDownloaderPlugin : MethodChannel.MethodCallHandler, FlutterPlugin {
         args["task_id"] = id
         args["status"] = status.ordinal
         args["progress"] = progress
+        args["file_size"] = "1000"
         flutterChannel?.invokeMethod("updateProgress", args)
     }
 
@@ -212,6 +213,7 @@ class FlutterDownloaderPlugin : MethodChannel.MethodCallHandler, FlutterPlugin {
             item["progress"] = task.progress
             item["url"] = task.url
             item["file_name"] = task.filename
+            item["file_size"] = task.filesize
             item["saved_dir"] = task.savedDir
             item["time_created"] = task.timeCreated
             item["allow_cellular"] = task.allowCellular

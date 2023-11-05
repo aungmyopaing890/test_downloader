@@ -13,6 +13,7 @@ class TaskDao(private val dbHelper: TaskDbHelper) {
         TaskEntry.COLUMN_NAME_STATUS,
         TaskEntry.COLUMN_NAME_URL,
         TaskEntry.COLUMN_NAME_FILE_NAME,
+        TaskEntry.COLUMN_NAME_FILE_SIZE,
         TaskEntry.COLUMN_NAME_SAVED_DIR,
         TaskEntry.COLUMN_NAME_HEADERS,
         TaskEntry.COLUMN_NAME_MIME_TYPE,
@@ -44,6 +45,7 @@ class TaskDao(private val dbHelper: TaskDbHelper) {
         values.put(TaskEntry.COLUMN_NAME_STATUS, status.ordinal)
         values.put(TaskEntry.COLUMN_NAME_PROGRESS, progress)
         values.put(TaskEntry.COLUMN_NAME_FILE_NAME, fileName)
+        // values.put(TaskEntry.COLUMN_NAME_FILE_SIZE, fileSize)
         values.put(TaskEntry.COLUMN_NAME_SAVED_DIR, savedDir)
         values.put(TaskEntry.COLUMN_NAME_HEADERS, headers)
         values.put(TaskEntry.COLUMN_NAME_MIME_TYPE, "unknown")
@@ -195,11 +197,32 @@ class TaskDao(private val dbHelper: TaskDbHelper) {
         }
     }
 
-    fun updateTask(taskId: String, filename: String?, mimeType: String?) {
+    fun updateTask(taskId: String, filename: String?, mimeType: String?, filesize: String?) {
         val db = dbHelper.writableDatabase
         val values = ContentValues()
         values.put(TaskEntry.COLUMN_NAME_FILE_NAME, filename)
         values.put(TaskEntry.COLUMN_NAME_MIME_TYPE, mimeType)
+        values.put(TaskEntry.COLUMN_NAME_FILE_SIZE, filesize)
+        db.beginTransaction()
+        try {
+            db.update(
+                TaskEntry.TABLE_NAME,
+                values,
+                TaskEntry.COLUMN_NAME_TASK_ID + " = ?",
+                arrayOf(taskId)
+            )
+            db.setTransactionSuccessful()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            db.endTransaction()
+        }
+    }
+    
+    fun updateFileSize(taskId: String, filesize: String?) {
+        val db = dbHelper.writableDatabase
+        val values = ContentValues()
+        values.put(TaskEntry.COLUMN_NAME_FILE_SIZE, filesize)
         db.beginTransaction()
         try {
             db.update(
@@ -238,6 +261,7 @@ class TaskDao(private val dbHelper: TaskDbHelper) {
         val progress = cursor.getInt(cursor.getColumnIndexOrThrow(TaskEntry.COLUMN_NAME_PROGRESS))
         val url = cursor.getString(cursor.getColumnIndexOrThrow(TaskEntry.COLUMN_NAME_URL))
         val filename = cursor.getString(cursor.getColumnIndexOrThrow(TaskEntry.COLUMN_NAME_FILE_NAME))
+        val filesize = cursor.getString(cursor.getColumnIndexOrThrow(TaskEntry.COLUMN_NAME_FILE_SIZE))
         val savedDir = cursor.getString(cursor.getColumnIndexOrThrow(TaskEntry.COLUMN_NAME_SAVED_DIR))
         val headers = cursor.getString(cursor.getColumnIndexOrThrow(TaskEntry.COLUMN_NAME_HEADERS))
         val mimeType = cursor.getString(cursor.getColumnIndexOrThrow(TaskEntry.COLUMN_NAME_MIME_TYPE))
@@ -254,6 +278,7 @@ class TaskDao(private val dbHelper: TaskDbHelper) {
             progress,
             url,
             filename,
+            filesize,
             savedDir,
             headers,
             mimeType,
@@ -265,4 +290,5 @@ class TaskDao(private val dbHelper: TaskDbHelper) {
             allowCellular = allowCelluar == 1
         )
     }
+
 }

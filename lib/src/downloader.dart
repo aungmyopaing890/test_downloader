@@ -116,6 +116,7 @@ class FlutterDownloader {
         'url': url,
         'saved_dir': savedDir,
         'file_name': fileName,
+        'file_size': 'test',
         'headers': jsonEncode(headers),
         'show_notification': showNotification,
         'open_file_from_notification': openFileFromNotification,
@@ -153,15 +154,18 @@ class FlutterDownloader {
           message: '`loadTasks` returned null',
         );
       }
-
+      print("From Loading Tasks");
+      print("[===========================================]");
       return result.map(
         (dynamic item) {
+          print(item['file_size']);
           return DownloadTask(
             taskId: item['task_id'] as String,
             status: DownloadTaskStatus.fromInt(item['status'] as int),
             progress: item['progress'] as int,
             url: item['url'] as String,
             filename: item['file_name'] as String?,
+            filesize: item['file_size'] as String?,
             savedDir: item['saved_dir'] as String,
             timeCreated: item['time_created'] as int,
 
@@ -220,6 +224,7 @@ class FlutterDownloader {
             progress: item['progress'] as int,
             url: item['url'] as String,
             filename: item['file_name'] as String?,
+            filesize: item['file_size'] as String?,
             savedDir: item['saved_dir'] as String,
             timeCreated: item['time_created'] as int,
 

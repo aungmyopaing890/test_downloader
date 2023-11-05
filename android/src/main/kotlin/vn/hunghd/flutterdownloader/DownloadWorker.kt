@@ -346,6 +346,9 @@ class DownloadWorker(context: Context, params: WorkerParameters) :
                 log("Content-Type = $contentType")
                 log("Content-Length = $contentLength")
                 val charset = getCharsetFromContentType(contentType)
+                log("$contentLength Bytes")
+                val contentLengthMB: Long =contentLength/1048576;
+                var fileSize: String? = "$contentLengthMB MB"
                 log("Charset = $charset")
                 if (!isResume) {
                     // try to extract filename from HTTP headers if it is not given by user
@@ -367,7 +370,7 @@ class DownloadWorker(context: Context, params: WorkerParameters) :
                     }
                 }
                 log("fileName = $actualFilename")
-                taskDao?.updateTask(id.toString(), actualFilename, contentType)
+                taskDao?.updateTask(id.toString(), actualFilename, contentType, fileSize)
 
                 // opens input stream from the HTTP connection
                 inputStream = httpConn.inputStream
